@@ -1,6 +1,6 @@
 {
-  "name": "@vamsitalupula/pi-run",
-  "repository": "github:tanavamsikrishna/pi-run",
+  "name": "@vamsitalupula/pi-debug",
+  "repository": "github:tanavamsikrishna/pi-debug",
   "version": "1.10.0",
   "description": "Run Typescript within the Node.js context of the Pi coding agent",
   "type": "module",
@@ -37,6 +37,6 @@
     "extensions": [
       "extensions/"
     ],
-    "image": "https://raw.githubusercontent.com/tanavamsikrishna/pi-run/refs/heads/main/screenshot.png"
+    "image": "https://raw.githubusercontent.com/tanavamsikrishna/pi-debug/refs/heads/main/screenshot.png"
   }
 }

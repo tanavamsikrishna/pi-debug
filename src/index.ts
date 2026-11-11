@@ -1,3 +1,10 @@
+/**
+ * Pi extension that runs a user TypeScript file inside the agent process.
+ *
+ * Registers `/pi-debug`. An empty target is filled from TEMPLATE.ts; otherwise
+ * jiti loads the file and calls its default export as `(pi, getCtx) => ...`.
+ * Scripts share the agent process: no sandbox, no reload.
+ */
 import type {
     ExtensionAPI,
     ExtensionContext,
@@ -23,7 +30,7 @@ export default function (pi: ExtensionAPI) {
     let jiti: Jiti | undefined = undefined;
 
     // Keep lastCtx current so the `() => lastCtx` getter remains valid
-    // after /pi-run returns (for deferred callbacks in user scripts).
+    // after /pi-debug returns (for deferred callbacks in user scripts).
     pi.on("session_start", async (_event, ctx) => {
         lastCtx = ctx;
     });
@@ -31,7 +38,7 @@ export default function (pi: ExtensionAPI) {
         lastCtx = ctx;
     });
 
-    pi.registerCommand("pi-run", {
+    pi.registerCommand("pi-debug", {
         description: "Run a .ts file with default export function",
         handler: async (args, ctx) => {
             lastCtx = ctx;
@@ -39,7 +46,7 @@ export default function (pi: ExtensionAPI) {
             let filePath = args?.trim() || "";
             if (filePath.startsWith("@")) filePath = filePath.slice(1);
             if (!filePath) {
-                ctx.ui.notify("Usage: /pi-run <file-path>", "info");
+                ctx.ui.notify("Usage: /pi-debug <file-path>", "info");
                 return;
             }
 
