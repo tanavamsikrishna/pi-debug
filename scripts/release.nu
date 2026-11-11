@@ -15,6 +15,5 @@ def main [] {
   jj tag set $tag -r $current_change_id
   jj describe -m $"Bump to ($tag)" -r $current_change_id --ignore-immutable
   jj bookmark set main -r $current_change_id
-  jj new
   jj git push --bookmark main --tag $tag
 }
