@@ -7,6 +7,6 @@ def main [] {
     return
   }
   npm version $version_bump_type
-  git push
-  git push --tags
+
+  jj git push --all
 }
