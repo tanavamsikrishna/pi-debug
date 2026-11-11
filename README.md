@@ -75,7 +75,7 @@ export default function (pi: ExtensionAPI, getCtx: () => ExtensionContext) {
 }
 ```
 
-**To get assistant message details with decreasing cache reads**
+**To find assistant message details with decreasing cache reads**
 
 ```ts
     const ctx = getCtx();
