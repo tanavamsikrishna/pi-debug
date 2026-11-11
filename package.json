@@ -5,8 +5,9 @@
   "description": "Run Typescript within the Node.js context of the Pi coding agent",
   "type": "module",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --clean --outDir extensions --publicDir ./static/",
-    "dev": "tsup src/index.ts --format esm --watch --outDir extensions --publicDir ./static/"
+    "build": "tsup src/index.ts --format esm --clean --outDir extensions --publicDir ./static/ --external @earendil-works/pi-coding-agent",
+    "dev": "tsup src/index.ts --format esm --watch --outDir extensions --publicDir ./static/ --external @earendil-works/pi-coding-agent",
+    "test": "node --experimental-strip-types --test test/pi-debug.test.ts"
   },
   "files": [
     "extensions",
@@ -25,7 +26,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jiti": "^2.7.0"
+    "jiti": "^2.7.0",
+    "typebox": "^1.1.24"
   },
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "^0.74.2",

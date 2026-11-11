@@ -11,6 +11,9 @@ importers:
       jiti:
         specifier: ^2.7.0
         version: 2.7.0
+      typebox:
+        specifier: ^1.1.24
+        version: 1.2.1
     devDependencies:
       '@earendil-works/pi-coding-agent':
         specifier: ^0.74.2
