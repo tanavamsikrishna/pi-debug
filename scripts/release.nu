@@ -8,5 +8,6 @@ def main [] {
   }
   npm version $version_bump_type
 
+  jj bookmark advance
   jj git push --all
 }
