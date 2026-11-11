@@ -26,8 +26,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jiti": "^2.7.0",
-    "typebox": "^1.1.24"
+    "jiti": "^2.7.0"
+  },
+  "peerDependencies": {
+    "typebox": "*"
   },
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "^0.74.2",
