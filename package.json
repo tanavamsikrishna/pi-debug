@@ -1,7 +1,7 @@
 {
   "name": "@vamsitalupula/pi-debug",
   "repository": "github:tanavamsikrishna/pi-debug",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Run Typescript within the Node.js context of the Pi coding agent",
   "type": "module",
   "scripts": {
