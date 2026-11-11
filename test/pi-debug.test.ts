@@ -3,7 +3,7 @@
  * and that the tool description includes TEMPLATE.ts.
  */
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -196,6 +196,71 @@ test("tool truncates output and keeps the full text in a temp file", async () =>
     } finally {
         rmSync(cwd, { recursive: true, force: true });
         if (fullOutputPath) rmSync(path.dirname(fullOutputPath), { recursive: true, force: true });
+    }
+});
+
+test("slash command reports a missing export and a missing return without a Result prefix", async () => {
+    const { command } = load();
+    const cwd = tempDir();
+    const notes: { message: string; level?: string }[] = [];
+    const ctx = {
+        cwd,
+        ui: {
+            notify(message: string, level?: string) {
+                notes.push({ message, level });
+            },
+        },
+    };
+    try {
+        writeFileSync(path.join(cwd, "empty-export.ts"), "export const n = 1;\n");
+        writeFileSync(path.join(cwd, "no-return.ts"), "export default function () {}\n");
+
+        await command.handler("empty-export.ts", ctx);
+        await command.handler("no-return.ts", ctx);
+
+        assert.deepEqual(notes, [
+            { message: "Error: No default export function found", level: "error" },
+            { message: "Done (no return value)", level: "info" },
+        ]);
+    } finally {
+        rmSync(cwd, { recursive: true, force: true });
+    }
+});
+
+test("slash command evaluates file source from the session directory", async () => {
+    const { command } = load();
+    const cwd = tempDir();
+    const notes: { message: string; level?: string }[] = [];
+    try {
+        writeFileSync(path.join(cwd, "local.ts"), "export const n = 7;\n");
+        mkdirSync(path.join(cwd, "nested"));
+        writeFileSync(
+            path.join(cwd, "nested/mod.ts"),
+            `
+                import { n } from "./local.ts";
+                export default function () {
+                    return { n, url: import.meta.url };
+                }
+            `,
+        );
+
+        await command.handler("nested/mod.ts", {
+            cwd,
+            ui: {
+                notify(message, level) {
+                    notes.push({ message, level });
+                },
+            },
+        });
+
+        assert.equal(notes.length, 1);
+        assert.equal(notes[0].level, "info");
+        const parsed = JSON.parse(notes[0].message.replace(/^Result:\n/, ""));
+        assert.equal(parsed.n, 7);
+        assert.match(parsed.url, /\.pi-debug-eval\.ts$/);
+        assert.equal(existsSync(path.join(cwd, ".pi-debug-eval.ts")), false);
+    } finally {
+        rmSync(cwd, { recursive: true, force: true });
     }
 });
 
