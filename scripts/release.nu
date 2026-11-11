@@ -10,10 +10,11 @@ def main [] {
 
   let new_version = node -p "require('./package.json').version" | str trim
   let tag = $"v($new_version)"
+  let current_change_id = jj show --no-patch -T 'self.change_id()' | str trim
 
-  jj tag set $tag
-  jj describe -m $"Bump to ($tag)"
-  jj bookmark set main -r @
+  jj tag set $tag -r $current_change_id
+  jj describe -m $"Bump to ($tag)" -r $current_change_id
+  jj bookmark set main -r $current_change_id
   jj new
   jj git push --bookmark main --tag $tag
 }
